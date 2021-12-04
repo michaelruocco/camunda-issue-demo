@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1b5d34n" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.11.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
+  <bpmn:process id="request-item" name="request-item" isExecutable="true">
+    <bpmn:startEvent id="item-requested" name="item-requested">
+      <bpmn:outgoing>Flow_0ccdalc</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="find-open-requests" name="find-open-requests" camunda:asyncAfter="true" camunda:delegateExpression="#{findOpenRequestsDelegate}">
+      <bpmn:incoming>Flow_0ccdalc</bpmn:incoming>
+      <bpmn:outgoing>Flow_0mupyia</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="is-open" name="is-open">
+      <bpmn:incoming>Flow_0mupyia</bpmn:incoming>
+      <bpmn:outgoing>yes</bpmn:outgoing>
+      <bpmn:outgoing>no</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0ccdalc" sourceRef="item-requested" targetRef="find-open-requests" />
+    <bpmn:sequenceFlow id="Flow_0mupyia" sourceRef="find-open-requests" targetRef="is-open" />
+    <bpmn:sendTask id="issue-request-update" name="issue-request-update" camunda:delegateExpression="#{issueRequestUpdateDelegate}">
+      <bpmn:incoming>yes</bpmn:incoming>
+      <bpmn:outgoing>Flow_0q50lp3</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:sequenceFlow id="yes" name="yes" sourceRef="is-open" targetRef="issue-request-update">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action=="UPDATE" || action=="RESTART"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="update-sent" name="update-sent">
+      <bpmn:incoming>Flow_0q50lp3</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0q50lp3" sourceRef="issue-request-update" targetRef="update-sent" />
+    <bpmn:endEvent id="request-created" name="request-created">
+      <bpmn:incoming>Flow_12lyqr6</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_12lyqr6" sourceRef="create-request" targetRef="request-created" />
+    <bpmn:sequenceFlow id="no" name="no" sourceRef="is-open" targetRef="create-request">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action=="CREATE"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sendTask id="create-request" name="create-request" camunda:delegateExpression="#{createRequestDelegate}">
+      <bpmn:incoming>no</bpmn:incoming>
+      <bpmn:outgoing>Flow_12lyqr6</bpmn:outgoing>
+    </bpmn:sendTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="request-item">
+      <bpmndi:BPMNEdge id="Flow_12lyqr6_di" bpmnElement="Flow_12lyqr6">
+        <di:waypoint x="700" y="290" />
+        <di:waypoint x="762" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0q50lp3_di" bpmnElement="Flow_0q50lp3">
+        <di:waypoint x="700" y="120" />
+        <di:waypoint x="762" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0p4vv8b_di" bpmnElement="no">
+        <di:waypoint x="510" y="232" />
+        <di:waypoint x="510" y="290" />
+        <di:waypoint x="600" y="290" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="523" y="263" width="13" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0x13xyl_di" bpmnElement="yes">
+        <di:waypoint x="510" y="182" />
+        <di:waypoint x="510" y="120" />
+        <di:waypoint x="600" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="521" y="133" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0mupyia_di" bpmnElement="Flow_0mupyia">
+        <di:waypoint x="400" y="207" />
+        <di:waypoint x="485" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ccdalc_di" bpmnElement="Flow_0ccdalc">
+        <di:waypoint x="215" y="207" />
+        <di:waypoint x="300" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="item-requested">
+        <dc:Bounds x="179" y="189" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="160" y="232" width="74" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1nktwt0_di" bpmnElement="find-open-requests">
+        <dc:Bounds x="300" y="167" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0hxp2pc_di" bpmnElement="is-open" isMarkerVisible="true">
+        <dc:Bounds x="485" y="182" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="542" y="200" width="37" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1hnk021_di" bpmnElement="issue-request-update">
+        <dc:Bounds x="600" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1vidvhp_di" bpmnElement="update-sent">
+        <dc:Bounds x="762" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="751" y="145" width="59" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0xwwr92_di" bpmnElement="request-created">
+        <dc:Bounds x="762" y="272" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="741" y="315" width="78" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1m70key_di" bpmnElement="create-request">
+        <dc:Bounds x="600" y="250" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

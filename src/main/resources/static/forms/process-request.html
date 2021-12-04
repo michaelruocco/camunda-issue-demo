@@ -1,0 +1,39 @@
+<form role="form" class="form-horizontal">
+    <script cam-script type="text/form-script">
+        camForm.on('form-loaded', function () {
+          camForm.variableManager.fetchVariable('requestForm');
+        });
+
+        camForm.on('variables-fetched', function () {
+          $scope.approvalForm = camForm.variableManager.variableValue('requestForm');
+        });
+    </script>
+
+    <div class="control-group">
+        <label class="control-label">Requested By</label>
+        <div class="controls">
+            <input type="text"
+                   readonly="true"
+                   ng-model="approvalForm.requestedBy"
+                   class="form-control" />
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Items</label>
+        <div class="controls">
+            <input type="text"
+                   readonly="true"
+                   ng-model="approvalForm.items"
+                   class="form-control" />
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Approve?</label>
+        <div class="controls">
+            <input type="checkbox"
+                   cam-variable-name="approved"
+                   cam-variable-type="Boolean"
+                   class="form-control" />
+        </div>
+    </div>
+</form>

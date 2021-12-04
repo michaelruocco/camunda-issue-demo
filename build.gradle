@@ -10,6 +10,8 @@ plugins {
     id "org.sonarqube" version "3.3"
     id "com.adarshr.test-logger" version "3.1.0"
     id "nebula.lint" version "17.5.0"
+    id "org.springframework.boot" version "2.6.0"
+    id "io.spring.dependency-management" version "1.0.11.RELEASE"
 }
 
 group "com.github.michaelruocco"
@@ -17,9 +19,11 @@ group "com.github.michaelruocco"
 ext {
     slf4jVersion = "1.7.32"
     lombokVersion = "1.18.22"
+    camundaVersion = "7.16.0"
 
     junitVersion = "5.8.2"
 }
+ext['junit-jupiter.version'] = "${junitVersion}"
 
 scmVersion {
     versionCreator "versionWithBranch"
@@ -41,8 +45,12 @@ gradleLint {
 dependencies {
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-
+    runtimeOnly "com.h2database:h2:1.4.200"
     implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+    implementation "org.camunda.bpm.springboot:camunda-bpm-spring-boot-starter-webapp:${camundaVersion}"
+    implementation "org.camunda.bpm.springboot:camunda-bpm-spring-boot-starter-rest:${camundaVersion}"
+    implementation "org.camunda.bpm:camunda-engine-plugin-spin:${camundaVersion}"
+    implementation "org.camunda.spin:camunda-spin-dataformat-json-jackson:1.12.0"
 
     testRuntimeOnly "org.slf4j:slf4j-simple:${slf4jVersion}"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
