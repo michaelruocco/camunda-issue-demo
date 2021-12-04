@@ -3,7 +3,7 @@ name: pipeline
 on:
   push:
     branches-ignore:
-      - 'library-template-*'
+      - 'camunda-issue-demo-*'
 
 jobs:
   build:

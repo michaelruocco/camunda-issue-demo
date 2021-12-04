@@ -92,7 +92,7 @@ java {
     withSourcesJar()
 }
 
-def gitUrl = "https://github.com/michaelruocco/library-template"
+def gitUrl = "https://github.com/michaelruocco/camunda-issue-demo"
 def pomConfig = {
     licenses {
         license {
@@ -130,7 +130,7 @@ publishing {
             from components.java
             pom.withXml {
                 def root = asNode()
-                root.appendNode("description", "Template repo to speed up creating new library projects")
+                root.appendNode("description", "Small repo to demonstrate an issue we are having with camunda to try and get some help resolving it")
                 root.appendNode("name", project.name)
                 root.appendNode("url", gitUrl)
                 root.children().last() + pomConfig
