@@ -1,0 +1,9 @@
+{
+  "variables": {
+    "requestForm": {
+      "value": "{\"items\":${items},\"requestedBy\":\"${requestedBy}\"}",
+      "type": "Json"
+    }
+  },
+  "businessKey": "${businessKey}"
+}
